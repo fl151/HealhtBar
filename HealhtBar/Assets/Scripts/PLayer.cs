@@ -9,14 +9,14 @@ public class Player : MonoBehaviour
     public int Health { get; private set; }
     public int MaxHealht { get; private set; }
 
-    public UnityAction HealthChangedEvent;
+    public UnityAction HealthChanged;
 
     private void Start()
     {
         MaxHealht = 100;
         Health = MaxHealht;
 
-        HealthChangedEvent?.Invoke();
+        HealthChanged?.Invoke();
     }
 
     public void TakeDamage(int damage)
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
 
         Health = Mathf.Clamp(Health, 0, MaxHealht);
 
-        HealthChangedEvent?.Invoke();
+        HealthChanged?.Invoke();
     }
 
     public void TakeHeal(int heal)
@@ -40,6 +40,6 @@ public class Player : MonoBehaviour
 
         Health = Mathf.Clamp(Health, 0, MaxHealht);
 
-        HealthChangedEvent?.Invoke();
+        HealthChanged?.Invoke();
     }
 }

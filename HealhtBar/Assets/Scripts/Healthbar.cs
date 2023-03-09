@@ -17,7 +17,7 @@ public class Healthbar : MonoBehaviour
     {
         _slider = GetComponent<Slider>();
 
-        _player.HealthChangedEvent += ChangeValue;
+        _player.HealthChanged += ChangeValue;
     }
 
     private void Start()
