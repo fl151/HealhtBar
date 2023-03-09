@@ -3,31 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Slider))]
+[RequireComponent(typeof(Player))]
 public class Healthbar : MonoBehaviour
 {
-    private Slider _slider;
-    private PLayer _player;
+    [SerializeField] private Player _player;
 
+    private Slider _slider;
     private float _targetValue;
 
-    private void Start()
+
+    private void Awake()
     {
         _slider = GetComponent<Slider>();
-        _player = FindObjectOfType<PLayer>();
 
         _player.HealthChanged.AddListener(ChangeValue);
     }
 
-    private void Update()
+    private void Start()
     {
-        if (_slider.value != _targetValue)
-        {
-            _slider.value = Mathf.MoveTowards(_slider.value, _targetValue, Time.deltaTime);
-        }
+        StartCoroutine(ChangeSliderValue());
     }
 
     private void ChangeValue()
     {
         _targetValue = _player.Health / (float)_player.MaxHealht;
+
+        StartCoroutine(ChangeSliderValue());
+    }
+
+    private IEnumerator ChangeSliderValue()
+    {
+        while (_slider.value != _targetValue)
+        {
+            _slider.value = Mathf.MoveTowards(_slider.value, _targetValue, Time.deltaTime);
+
+            yield return new WaitForEndOfFrame();
+        }
     }
 }
