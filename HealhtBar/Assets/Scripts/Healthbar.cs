@@ -11,34 +11,41 @@ public class Healthbar : MonoBehaviour
 
     private Slider _slider;
     private float _targetValue;
-
+    private Coroutine _changingSliderValue;
 
     private void Awake()
     {
         _slider = GetComponent<Slider>();
 
-        _player.HealthChanged.AddListener(ChangeValue);
+        _player.HealthChangedEvent += ChangeValue;
     }
 
     private void Start()
     {
-        StartCoroutine(ChangeSliderValue());
+        _changingSliderValue = StartCoroutine(ChangeSliderValue());
     }
 
     private void ChangeValue()
     {
         _targetValue = _player.Health / (float)_player.MaxHealht;
 
+        if(_changingSliderValue != null)
+        {
+            StopCoroutine(_changingSliderValue);
+        }
+
         StartCoroutine(ChangeSliderValue());
     }
 
     private IEnumerator ChangeSliderValue()
     {
+        var delay = new WaitForEndOfFrame();
+
         while (_slider.value != _targetValue)
         {
             _slider.value = Mathf.MoveTowards(_slider.value, _targetValue, Time.deltaTime);
 
-            yield return new WaitForEndOfFrame();
+            yield return delay;
         }
     }
 }
